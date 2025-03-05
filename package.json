@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/main/server.ts",
   "scripts": {
-    "dev": "ts-node-dev src/main/server.ts",
+    "local": "ts-node-dev src/main/server.ts",
     "build": "tsc && copyfiles -u 1 src/infra/migrations/data/* dist",
     "start": "npm run build && node dist/main/server.js",
     "test:integration": "jest --all -config=jest-integration.config.ts",
