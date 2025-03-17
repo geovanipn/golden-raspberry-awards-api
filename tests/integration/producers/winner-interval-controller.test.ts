@@ -5,8 +5,8 @@ import app from "../../../src/main/config/app";
 import SqliteDataBase from "../../../src/infra/database/sqlite";
 
 describe('WinnerIntervalController: Get Producers Winners intervals min and max', () => {
-    let movieRepository: Repository<Movie>;
 
+    let movieRepository: Repository<Movie>;
     beforeAll(async () => {
         await SqliteDataBase.initialize();
         movieRepository = SqliteDataBase.getRepository(Movie);
@@ -87,10 +87,41 @@ describe('WinnerIntervalController: Get Producers Winners intervals min and max'
         const response = await request(app)
             .get('/producers/winners/intervals');
 
-        console.log(response.body);
-
         // assert
         expect(response.status).toBe(200);
         expect(response.body).toEqual(expectedResult);
+    });
+
+
+
+    it('Should return expected result based on default movies preloaded', async () => {
+        // arrange
+        await SqliteDataBase.runMigrations();
+        const expectedResultBasedOnMoviesPreloaded = {
+            "min": [
+                {
+                    "producer": "Joel Silver",
+                    "interval": 1,
+                    "previousWin": 1990,
+                    "followingWin": 1991
+                }
+            ],
+            "max": [
+                {
+                    "producer": "Matthew Vaughn",
+                    "interval": 13,
+                    "previousWin": 2002,
+                    "followingWin": 2015
+                }
+            ]
+        };
+
+        // act
+        const response = await request(app)
+            .get('/producers/winners/intervals');
+
+        // assert
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual(expectedResultBasedOnMoviesPreloaded);
     });
 });
